@@ -20,7 +20,7 @@ class ProjectController extends Controller
         $sortField = request("sort_field", "created_at");
 
         // default sort direction
-        $sortDirection = request("sord_direction", "desc");
+        $sortDirection = request("sort_direction", "desc");
 
         // filter by name if  provided
         if (request("name")) {
