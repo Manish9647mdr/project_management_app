@@ -7,10 +7,9 @@ import {
 } from "@/constants.jsx";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, router } from "@inertiajs/react";
-import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/16/solid";
 import TableHeading from "@/Components/TableHeading";
 
-export default function Index({ auth, projects, queryParams = null }) {
+export default function Index({ auth, projects, queryParams = null, success }) {
     queryParams = queryParams || {};
     const searchFieldChanged = (name, value) => {
         if (value) {
@@ -43,19 +42,41 @@ export default function Index({ auth, projects, queryParams = null }) {
         router.get(route("project.index"), queryParams);
     };
 
+    const deleteProject = (project) => {
+        if (window.confirm("Are you sure you want to delete the project")) {
+            return;
+        }
+        router.delete(route("project.destroy", project.id));
+    };
+
     return (
         <AuthenticatedLayout
             user={auth.user}
             header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-                    Projects
-                </h2>
+                <div className="flex justify-between items-center">
+                    {/* Header name */}
+                    <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
+                        Projects
+                    </h2>
+                    {/* add new project link */}
+                    <Link
+                        href={route("project.create")}
+                        className="bg-emerald-500 py-1 px-3 text-white rounded shadow transition-all hover:bg-emerald-600"
+                    >
+                        Add new
+                    </Link>
+                </div>
             }
         >
             <Head title="Projects" />
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                    {success && (
+                        <div className="bg-emerald-500 py-2 px-4 text-white rounded mb-4">
+                            {success}
+                        </div>
+                    )}
                     <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900 dark:text-gray-100">
                             <div className="overflow-auto">
@@ -65,8 +86,12 @@ export default function Index({ auth, projects, queryParams = null }) {
                                             {/* Id Field */}
                                             <TableHeading
                                                 name="id"
-                                                sort_field={queryParams.sort_field}
-                                                sort_direction={queryParams.sort_direction}
+                                                sort_field={
+                                                    queryParams.sort_field
+                                                }
+                                                sort_direction={
+                                                    queryParams.sort_direction
+                                                }
                                                 sortChanged={sortChanged}
                                             >
                                                 ID
@@ -74,7 +99,9 @@ export default function Index({ auth, projects, queryParams = null }) {
 
                                             {/* Image field */}
                                             <th
-                                                onClick={(e) => sortChanged("image")}
+                                                onClick={(e) =>
+                                                    sortChanged("image")
+                                                }
                                                 className="px-3 py-3 "
                                             >
                                                 Image
@@ -83,8 +110,12 @@ export default function Index({ auth, projects, queryParams = null }) {
                                             {/* Name field */}
                                             <TableHeading
                                                 name="name"
-                                                sort_field={queryParams.sort_field}
-                                                sort_direction={queryParams.sort_direction}
+                                                sort_field={
+                                                    queryParams.sort_field
+                                                }
+                                                sort_direction={
+                                                    queryParams.sort_direction
+                                                }
                                                 sortChanged={sortChanged}
                                             >
                                                 Name
@@ -93,8 +124,12 @@ export default function Index({ auth, projects, queryParams = null }) {
                                             {/* Status field */}
                                             <TableHeading
                                                 name="status"
-                                                sort_field={queryParams.sort_field}
-                                                sort_direction={queryParams.sort_direction}
+                                                sort_field={
+                                                    queryParams.sort_field
+                                                }
+                                                sort_direction={
+                                                    queryParams.sort_direction
+                                                }
                                                 sortChanged={sortChanged}
                                             >
                                                 Status
@@ -103,8 +138,12 @@ export default function Index({ auth, projects, queryParams = null }) {
                                             {/* Created At field */}
                                             <TableHeading
                                                 name="created_at"
-                                                sort_field={queryParams.sort_field}
-                                                sort_direction={queryParams.sort_direction}
+                                                sort_field={
+                                                    queryParams.sort_field
+                                                }
+                                                sort_direction={
+                                                    queryParams.sort_direction
+                                                }
                                                 sortChanged={sortChanged}
                                             >
                                                 Created Date
@@ -113,8 +152,12 @@ export default function Index({ auth, projects, queryParams = null }) {
                                             {/* Due Date field */}
                                             <TableHeading
                                                 name="due_date"
-                                                sort_field={queryParams.sort_field}
-                                                sort_direction={queryParams.sort_direction}
+                                                sort_field={
+                                                    queryParams.sort_field
+                                                }
+                                                sort_direction={
+                                                    queryParams.sort_direction
+                                                }
                                                 sortChanged={sortChanged}
                                             >
                                                 Due Date
@@ -203,7 +246,12 @@ export default function Index({ auth, projects, queryParams = null }) {
                                                     />
                                                 </td>
                                                 <th className="px-3 py-2 text-white text-nowrap hover:underline">
-                                                    <Link href={route("project.show", project.id)}>
+                                                    <Link
+                                                        href={route(
+                                                            "project.show",
+                                                            project.id
+                                                        )}
+                                                    >
                                                         {project.name}
                                                     </Link>
                                                 </th>
@@ -212,13 +260,13 @@ export default function Index({ auth, projects, queryParams = null }) {
                                                         className={
                                                             "px-2 py-1 rounded text-white " +
                                                             PROJECT_STATUS_CLASS_MAP[
-                                                            project.status
+                                                                project.status
                                                             ]
                                                         }
                                                     >
                                                         {
                                                             PROJECT_STATUS_TEXT_MAP[
-                                                            project.status
+                                                                project.status
                                                             ]
                                                         }
                                                     </span>
@@ -242,7 +290,12 @@ export default function Index({ auth, projects, queryParams = null }) {
                                                     >
                                                         Edit
                                                     </Link>
-                                                    <Link
+                                                    <button
+                                                        onClick={(e) =>
+                                                            deleteProject(
+                                                                project
+                                                            )
+                                                        }
                                                         href={route(
                                                             "project.destroy",
                                                             project.id
@@ -250,7 +303,7 @@ export default function Index({ auth, projects, queryParams = null }) {
                                                         className="font-medium text-red-600 dark:text-red-500 hover:underline mx-1"
                                                     >
                                                         Delete
-                                                    </Link>
+                                                    </button>
                                                 </td>
                                             </tr>
                                         ))}

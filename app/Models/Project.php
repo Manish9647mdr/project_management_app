@@ -10,6 +10,8 @@ class Project extends Model
     /** @use HasFactory<\Database\Factories\ProjectFactory> */
     use HasFactory;
 
+    protected $fillable = ['image_paht', 'name', 'description', 'status', 'due_date', 'created_by', 'updated_by'];
+
     // One-to-many relationship :A project can have many tasks
     public function tasks()
     {
